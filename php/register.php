@@ -1,5 +1,6 @@
 <?php
 require_once 'C:\xampp\htdocs\GUVI\vendor\autoload.php';
+use Firebase\JWT\JWT;
 
 $firstName = $_POST['fname'];
 $lastName = $_POST['lname'];
@@ -51,9 +52,6 @@ $insertResult = $collection->insertOne($user);
 $id = $insertResult->getInsertedId();
 
 
-
-
-
 //if user not exist in db then encrypt password and store in mysql
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 $stmt = $pdo->prepare("INSERT INTO Auth (email, id, password) VALUES (:email, :id, :password)");
@@ -61,9 +59,23 @@ $stmt->bindValue(':email', $email);
 $stmt->bindValue(':id', $id);
 $stmt->bindValue(':password', $hashed_password);
 $stmt->execute();
+
+//create and return a jwt to client
+$redis = new Redis();
+$redis->connect('127.0.0.1', 6379);
+$secret_key = 'jsh7483yj4ljer54dsbjksd@#^$jbjsh';
+$payload = [
+    'id' => $id,
+    'email' => $email
+];
+$expiration_time = 3600;
+$token = JWT::encode($payload, $secret_key,'HS256');
+// Store the token in Redis with an expiration time
+$redis->setex($token, $expiration_time, $email);
 $response = [
     'status' => 'succes',
-    'message' => 'user created succesfully'
+    'message' => 'user created succesfully',
+    'token' => $token
 ];
 echo json_encode($response);
 die();

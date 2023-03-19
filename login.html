@@ -19,15 +19,19 @@
                     <form id="login">
                     <!-- Email input -->
                     <div class="form-outline mb-4">
-                        <input type="email" id="email" class="form-control" required/>
+                        <input type="email" id="email" class="form-control" required name="email"/>
                         <label class="form-label" for="email">Email address</label>
                     </div>
         
                     <!-- Password input -->
                     <div class="form-outline mb-4">
-                        <input type="password" id="password" class="form-control" required/>
+                        <input type="password" id="password" class="form-control" required name="password"/>
                         <label class="form-label" for="password">Password</label>
                     </div>
+
+                    <div class="msg" id="lmsg"></div>
+                    <br>
+
                     <!-- Submit button -->
                     <button type="submit" class="btn btn-primary btn-block mb-4" id="submit">
                         Login
