@@ -7,7 +7,7 @@ document.getElementById('submit').addEventListener('click',event=>{
         event.preventDefault()
         console.log("login prevented by form")
         //make an ajax request to php server for login
-        var formData = $('#login').serialize()
+        let formData = $('#login').serialize()
         console.log(formData)
         $.ajax({ 
             url: 'php/login.php',

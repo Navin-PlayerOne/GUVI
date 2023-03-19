@@ -1,4 +1,13 @@
 <?php
+require_once 'C:\xampp\htdocs\GUVI\vendor\autoload.php';
+$mongoClient = new MongoDB\Client('mongodb://localhost:27017');
+
+$UserInfoDB = $mongoClient->userinfodb;
+
+$result = $UserInfoDB -> createCollection('profile');
+var_dump($result);
+
+
 // create a PDO object to connect to the database
 // $dsn = 'mysql:host=localhost;dbname=mydatabase';
 // $username = 'myusername';
@@ -18,12 +27,9 @@
 
 // // output a success message
 
-$redis = new Redis();
-$redis->connect('127.0.0.1', 6379);
-echo "Connection to server successfully";
-$redis->set("test_key", "Hello World!");
-echo "Stored string in redis: " . $redis->get("test_key");
-
-
-
+// $redis = new Redis();
+// $redis->connect('127.0.0.1', 6379);
+// echo "Connection to server successfully";
+// $redis->set("test_key", "Hello World!");
+// echo "Stored string in redis: " . $redis->get("test_key");
 ?>
