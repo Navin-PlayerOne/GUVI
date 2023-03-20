@@ -66,8 +66,6 @@ saveBtn.addEventListener('click', () => {
   editBtn.classList.remove('d-none');
   saveBtn.classList.add('d-none');
   cancelBtn.classList.add('d-none');
-  // Send the form data to the server using AJAX
-  // ...
 });
 
 // Add event listener to the Cancel button

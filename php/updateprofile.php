@@ -21,8 +21,8 @@ if(empty($token)){
 }
 
 //if not valid token return
-$email = verifyToken($token);
-if(empty($email)){
+$emailTok = verifyToken($token);
+if(empty($emailTok)){
     $response = [
         'status' => 'failure',
         'message' => 'UnAuthorized'
@@ -39,7 +39,7 @@ $pdo = new PDO($dsn, $dbUsername, $dbPassword);
 
 //fetch id from mysql using emailid
 $stmt = $pdo->prepare("SELECT * FROM Auth WHERE email= :email");
-$stmt->bindValue(':email', $email);
+$stmt->bindValue(':email', $emailTok);
 $stmt->execute();
 $numRows = $stmt->rowCount();
 
