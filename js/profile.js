@@ -120,3 +120,9 @@ if(token!=undefined && token!=null && token!==""){
 else{
     window.location.href = 'login.html'
 }
+
+const logout = document.getElementById('logout');
+logout.addEventListener('click',()=>{
+  localStorage.setItem('tokenId','')
+  window.location.href = 'login.html'
+});

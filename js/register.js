@@ -34,3 +34,24 @@ document.getElementById('submit').addEventListener('click',event=>{
         });
     }
 })
+
+//verify the token when we load the page
+let token = localStorage.getItem('tokenId')
+if(token!=undefined && token!=null && token!==""){
+  $.ajax({ 
+    url: 'php/verifyAuthStatus.php',
+    method: 'POST',
+    data: {token},
+    success: function(response) {
+      console.log(response)
+      let res = JSON.parse(response)
+      if(res.ok){
+        window.location.href = 'profile.html'
+      }
+    },
+    error: function(xhr, status, error) {
+      // Handle errors
+      console.log(error);
+    }
+  });
+}
