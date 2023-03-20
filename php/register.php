@@ -2,6 +2,8 @@
 require_once 'C:\xampp\htdocs\GUVI\vendor\autoload.php';
 use Firebase\JWT\JWT;
 
+$env = parse_ini_file('../.env');
+
 $firstName = $_POST['fname'];
 $lastName = $_POST['lname'];
 $email = $_POST['email'];
@@ -9,9 +11,9 @@ $password = $_POST['password'];
 $phone = $_POST['phone'];
 
 // create a PDO object to connect to the database
-$dsn = 'mysql:host=localhost;dbname=auth';
-$dbUsername = 'root';
-$dbPassword = 'okokokok';
+$dsn = $env['MYSQL_URL'];
+$dbUsername = $env["MYSQL_USER_NAME"];
+$dbPassword = $env["MYSQL_PASSWORD"];
 $pdo = new PDO($dsn, $dbUsername, $dbPassword);
 
 // prepare a SQL statement to create the table if it doesn't exist
@@ -38,7 +40,7 @@ if ($result > 0) {
 }
 
 //create user record in mongo db
-$client = new MongoDB\Client('mongodb://localhost:27017');
+$client = new MongoDB\Client($env['MONGODB_URL']);
 $database = $client->userinfodb;
 $collection = $database->profile;
 if (!$collection) {
@@ -67,7 +69,7 @@ $time = time();
 $expiration_time = $time + 3600;
 $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
-$secret_key = 'jsh7483yjjbjsh';
+$secret_key = $env['JWT_SECRET'];
 $payload = [
     'id' => $id,
     'email' => $email,

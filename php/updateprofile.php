@@ -2,6 +2,7 @@
 require_once 'C:\xampp\htdocs\GUVI\vendor\autoload.php';
 require_once 'verify.php';
 use Firebase\JWT\JWT;
+$env = parse_ini_file('../.env');
 
 $token = $_POST['token'];
 $firstName = $_POST['fname'];
@@ -31,9 +32,9 @@ if(empty($email)){
 }
 
 // create a PDO object to connect to the database
-$dsn = 'mysql:host=localhost;dbname=auth';
-$dbUsername = 'root';
-$dbPassword = 'okokokok';
+$dsn = $env['MYSQL_URL'];
+$dbUsername = $env["MYSQL_USER_NAME"];
+$dbPassword = $env["MYSQL_PASSWORD"];
 $pdo = new PDO($dsn, $dbUsername, $dbPassword);
 
 //fetch id from mysql using emailid
@@ -57,7 +58,7 @@ foreach ($rows as $row) {
 }
 
 //contact to mongo db
-$client = new MongoDB\Client('mongodb://localhost:27017');
+$client = new MongoDB\Client($env['MONGODB_URL']);
 $database = $client->userinfodb;
 $collection = $database->profile;
 if (!$collection) {

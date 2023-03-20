@@ -6,13 +6,15 @@ use Firebase\JWT\SignatureInvalidException;
 use Firebase\JWT\BeforeValidException;
 use Firebase\JWT\ExpiredException;
 
+
 function verifyToken($token){
+$env = parse_ini_file('../.env');
 // Connect to Redis
 $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
 
 // Set the JWT secret key
-$key = 'jsh7483yjjbjsh';
+$key = $env['JWT_SECRET'];
 try {
     // Verify the token signature
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
