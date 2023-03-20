@@ -11,7 +11,14 @@ $dbUsername = 'root';
 $dbPassword = 'okokokok';
 $pdo = new PDO($dsn, $dbUsername, $dbPassword);
 
-
+// prepare a SQL statement to create the table if it doesn't exist
+$sql = 'CREATE TABLE IF NOT EXISTS Auth (
+    email VARCHAR(50) NOT NULL PRIMARY KEY,
+    id  VARCHAR(30) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )';
+  $pdo->exec($sql);
 
 
 //check wether the user is already exist or not if
@@ -47,22 +54,26 @@ if (!password_verify($password, $hashed_password)) {
 }
 //if everything is correct
 //create and return a jwt to client
+$time = time();
+$expiration_time = $time + 3600;
 $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
-$secret_key = 'jsh7483yj4ljer54dsbjksd@#^$jbjsh';
+$secret_key = 'jsh7483yjjbjsh';
 $payload = [
     'id' => $id,
-    'email' => $email
+    'email' => $email,
+    'iat' => $time,
+    'exp' => $expiration_time // Set the token to expire in 1 hour
+
 ];
-$expiration_time = 3600;
 $token = JWT::encode($payload, $secret_key,'HS256');
-// Store the token in Redis with an expiration time
-$redis->setex($token, $expiration_time, $email);
 $response = [
     'status' => 'succes',
     'message' => 'login succesfully',
     'token' => $token
 ];
+// Store the token in Redis with an expiration time
+$redis->setex($token, $expiration_time, $email);
 echo json_encode($response);
 die();
 

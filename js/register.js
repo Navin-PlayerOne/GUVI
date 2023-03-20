@@ -17,6 +17,7 @@ document.getElementById('submit').addEventListener('click',event=>{
             method: 'POST',
             data: formData,
             success: function(response) {
+              console.log(response)
               let res = JSON.parse(response)
               if(res.token){
                 localStorage.setItem('tokenId',res.token)

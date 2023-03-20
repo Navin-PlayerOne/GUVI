@@ -2,8 +2,12 @@
 require_once 'C:\xampp\htdocs\GUVI\vendor\autoload.php';
 require_once 'verify.php';
 use Firebase\JWT\JWT;
-$token = $_POST['token'];
 
+$token = $_POST['token'];
+$firstName = $_POST['fname'];
+$lastName = $_POST['lname'];
+$email = $_POST['email'];
+$phone = $_POST['phone'];
 
 //if token is empty then return
 if(empty($token)){
@@ -25,6 +29,7 @@ if(empty($email)){
     echo json_encode($response);
     die();
 }
+
 // create a PDO object to connect to the database
 $dsn = 'mysql:host=localhost;dbname=auth';
 $dbUsername = 'root';
@@ -59,14 +64,32 @@ if (!$collection) {
     $collection = $database->createCollection('profile');
 }
 
-//get document by its id in efficient way
-$document = $collection->findOne(['_id' => new MongoDB\BSON\ObjectID($id)]);
-$userObject = [
-    'firstname' => $document['firstname'],
-    'lastname' => $document['lastname'],
-    'email' => $document['email'],
-    'phone' => $document['phone']
-];
-echo json_encode($userObject);
-die();
+$result = $collection->updateOne(
+    ['_id' =>  new MongoDB\BSON\ObjectID($id)],
+    ['$set' => [
+        'firstname' => $firstName,
+        'lastname' => $lastName,
+        'email' => $email,
+        'phone' => $phone
+    ]]
+);
+if ($result->getMatchedCount() > 0) {
+    //success result
+    $userObject = [
+        'firstname' => $firstName,
+        'lastname' => $lastName,
+        'email' => $email,
+        'phone' => $phone
+    ];
+    echo json_encode($userObject);
+    die();
+} else {
+    $response = [
+        'status' => 'failure',
+        'message' => 'unknown error'
+    ];
+    echo json_encode($response);
+    die();
+}
+
 ?>
